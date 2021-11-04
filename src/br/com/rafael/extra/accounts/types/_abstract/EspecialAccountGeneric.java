@@ -1,6 +1,7 @@
-package br.com.rafael.accounts.types._abstract;
+package br.com.rafael.extra.accounts.types._abstract;
 
-import br.com.rafael.accounts.owners._abstract.Customer;
+import br.com.rafael.extra.accounts.owners._abstract.Customer;
+import java.math.BigDecimal;
 
 public abstract class EspecialAccountGeneric extends Account {
 
@@ -9,7 +10,7 @@ public abstract class EspecialAccountGeneric extends Account {
         super(owner, accountNumber);
     }
 
-    public EspecialAccountGeneric(Customer owner, int accountNumber, String agency, double valueEspecialCheck) {
+    public EspecialAccountGeneric(Customer owner, int accountNumber, String agency, BigDecimal valueEspecialCheck) {
         super(owner, accountNumber, agency, valueEspecialCheck);
     }
 }

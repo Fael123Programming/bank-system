@@ -1,12 +1,13 @@
-package br.com.rafael.accounts.types.concrete;
+package br.com.rafael.extra.accounts.types.concrete;
 
-import br.com.rafael.accounts.owners._abstract.Customer;
-import br.com.rafael.accounts.owners.concrete.LegalPerson;
-import br.com.rafael.accounts.types._abstract.EspecialAccountGeneric;
+import br.com.rafael.extra.accounts.owners._abstract.Customer;
+import br.com.rafael.extra.accounts.owners.concrete.LegalPerson;
+import br.com.rafael.extra.accounts.types._abstract.EspecialAccountGeneric;
+import java.math.BigDecimal;
 
 public class BusinessAccount extends EspecialAccountGeneric {
 
-    public BusinessAccount(LegalPerson owner, int accountNumber, String agency, double valueEspecialCheck) {
+    public BusinessAccount(LegalPerson owner, int accountNumber, String agency, BigDecimal valueEspecialCheck) {
         super(owner, accountNumber, agency, valueEspecialCheck);
     }
 

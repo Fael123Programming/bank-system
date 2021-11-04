@@ -1,4 +1,4 @@
-package br.com.rafael.accounts.owners._abstract;
+package br.com.rafael.extra.accounts.owners._abstract;
 
 import java.time.LocalDate;
 

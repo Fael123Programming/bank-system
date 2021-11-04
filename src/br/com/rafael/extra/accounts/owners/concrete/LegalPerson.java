@@ -1,6 +1,6 @@
-package br.com.rafael.accounts.owners.concrete;
+package br.com.rafael.extra.accounts.owners.concrete;
 
-import br.com.rafael.accounts.owners._abstract.Customer;
+import br.com.rafael.extra.accounts.owners._abstract.Customer;
 
 import java.time.LocalDate;
 

@@ -1,8 +1,9 @@
-package br.com.rafael.accounts.types.concrete;
+package br.com.rafael.extra.accounts.types.concrete;
 
-import br.com.rafael.accounts.owners._abstract.Customer;
-import br.com.rafael.accounts.owners.concrete.PhysicalPerson;
-import br.com.rafael.accounts.types._abstract.Account;
+import br.com.rafael.extra.accounts.owners._abstract.Customer;
+import br.com.rafael.extra.accounts.owners.concrete.PhysicalPerson;
+import br.com.rafael.extra.accounts.types._abstract.Account;
+import java.math.BigDecimal;
 
 public class CurrentAccount extends Account {
 
@@ -11,7 +12,7 @@ public class CurrentAccount extends Account {
     }
 
     public CurrentAccount(PhysicalPerson owner, int accountNumber, String agency) {
-        super(owner, accountNumber, agency, 0.0);//0.0 is the value of the especial check.
+        super(owner, accountNumber, agency, BigDecimal.ZERO);
     }
 
     @Override

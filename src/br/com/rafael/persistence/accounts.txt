@@ -1,1 +1,0 @@
-{responsavel: {nome: Rafael Quintino Fonseca Guimaraes, data de nascimento: 2002-06-11, CPF: 111.222.333.444-55}, tipo: 1, numero: 1000, saldo atual: 0.00, valor cheque especial: 0.00, agencia: 007-JB}
