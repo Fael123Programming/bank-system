@@ -36,4 +36,9 @@ public abstract class Customer {
     public String toString(){
         return String.format("{nome: %s, data de nascimento: %s", this.name, this.dateOfBirth.toString());
     }
+
+    public boolean equals(Object toCompare) {
+        if (!(toCompare instanceof Customer casted)) return false;
+        return this.name.equals(casted.name);
+    }
 }

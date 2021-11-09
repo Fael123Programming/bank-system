@@ -5,13 +5,13 @@ import br.com.rafael.extra.accounts.owners.concrete.PhysicalPerson;
 import br.com.rafael.extra.accounts.types._abstract.EspecialAccountGeneric;
 import java.math.BigDecimal;
 
-public class EspecialAccount extends EspecialAccountGeneric {
+public class SpecialAccount extends EspecialAccountGeneric {
 
-    public EspecialAccount(PhysicalPerson owner, int accountNumber) {
+    public SpecialAccount(PhysicalPerson owner, int accountNumber) {
         super(owner, accountNumber);
     }
 
-    public EspecialAccount(PhysicalPerson owner, int accountNumber, String agency, BigDecimal valueEspecialCheck) {
+    public SpecialAccount(PhysicalPerson owner, int accountNumber, String agency, BigDecimal valueEspecialCheck) {
         super(owner, accountNumber, agency, valueEspecialCheck);
     }
 

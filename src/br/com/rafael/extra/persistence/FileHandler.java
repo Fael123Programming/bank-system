@@ -7,7 +7,7 @@ public class FileHandler {
 
     private FileHandler() {}
 
-    public static void writeOver(String path, String information) throws IllegalArgumentException, FileNotFoundException, IOException {
+    public static void writeOver(String path, String information) throws IllegalArgumentException, IOException {
         if (path == null || information == null) throw new IllegalArgumentException("Invalid Arguments!");
         FileOutputStream output = new FileOutputStream(path); //Can cause a FileNotFoundException to be thrown!
         OutputStreamWriter writer = new OutputStreamWriter(output);

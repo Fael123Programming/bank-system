@@ -3,14 +3,13 @@ package br.com.rafael.extra.accounts.types._abstract;
 import br.com.rafael.extra.accounts.owners._abstract.Customer;
 import br.com.rafael.extra.accounts.owners.concrete.*;
 import br.com.rafael.extra.accounts.types.concrete.*;
+import br.com.rafael.extra.enum_.TypeOfAccount;
 import br.com.rafael.extra.exceptions.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.math.BigDecimal;
 
 public abstract class Account implements Comparable<Account> {
-    private static final String CURRENT_ACCOUNT = "Conta Corrente", SAVINGS_ACCOUNT = "Conta Poupanca",
-            ESPECIAL_ACCOUNT = "Conta Especial/Pessoa Fisica", BUSINESS_ACCOUNT = "Conta Especial/Pessoa Juridica";
     private static int numberOfAccounts = 0;
     private int accountNumber;
     private BigDecimal currentBalance, valueEspecialCheck;
@@ -91,13 +90,13 @@ public abstract class Account implements Comparable<Account> {
 
     public String getType() {
         if (CurrentAccount.class.equals(this.getClass())) {
-            return Account.CURRENT_ACCOUNT;
+            return TypeOfAccount.CURRENT_ACCOUNT.getIdentifierString();
         } else if (SavingsAccount.class.equals(this.getClass())) {
-            return Account.SAVINGS_ACCOUNT;
-        } else if (EspecialAccount.class.equals(this.getClass())) {
-            return Account.ESPECIAL_ACCOUNT;
+            return TypeOfAccount.SAVINGS_ACCOUNT.getIdentifierString();
+        } else if (SpecialAccount.class.equals(this.getClass())) {
+            return TypeOfAccount.SPECIAL_ACCOUNT.getIdentifierString();
         } else if (BusinessAccount.class.equals(this.getClass())) {
-            return Account.BUSINESS_ACCOUNT;
+            return TypeOfAccount.BUSINESS_ACCOUNT.getIdentifierString();
         }
         return null;
     }
@@ -139,18 +138,23 @@ public abstract class Account implements Comparable<Account> {
         } catch (ArrayIndexOutOfBoundsException | NullPointerException | NumberFormatException exc) {
             throw new UnparseableStringAccount();
         }
-        Customer accountOwner = switch(accountType) {
-            case Account.CURRENT_ACCOUNT, Account.SAVINGS_ACCOUNT, Account.ESPECIAL_ACCOUNT -> new PhysicalPerson(ownerName, LocalDate.parse(ownerDateOfBirth), ownerIdentification);
-            case Account.BUSINESS_ACCOUNT -> new LegalPerson(ownerName, LocalDate.parse(ownerDateOfBirth), ownerIdentification);
-            default -> throw new UnparseableStringAccount();
-        };
-        switch(accountType) {
-            case Account.CURRENT_ACCOUNT -> parsedAccount = new CurrentAccount((PhysicalPerson) accountOwner,accountNumber, agency);
-            case Account.SAVINGS_ACCOUNT -> parsedAccount = new SavingsAccount((PhysicalPerson) accountOwner, accountNumber, agency);
-            case Account.ESPECIAL_ACCOUNT -> parsedAccount = new EspecialAccount((PhysicalPerson) accountOwner, accountNumber, agency, valueEspecialCheck);
-            case Account.BUSINESS_ACCOUNT -> parsedAccount = new BusinessAccount((LegalPerson) accountOwner, accountNumber, agency, valueEspecialCheck);
-            default -> throw new UnparseableStringAccount();
-        }
+        Customer accountOwner;
+        if (accountType.equals(TypeOfAccount.CURRENT_ACCOUNT.getIdentifierString()) || accountType.equals(TypeOfAccount.SPECIAL_ACCOUNT.getIdentifierString()) ||
+                accountType.equals(TypeOfAccount.SAVINGS_ACCOUNT.getIdentifierString())) {
+            accountOwner = new PhysicalPerson(ownerName, LocalDate.parse(ownerDateOfBirth), ownerIdentification);
+        } else if (accountType.equals(TypeOfAccount.BUSINESS_ACCOUNT.getIdentifierString())) {
+            accountOwner = new LegalPerson(ownerName, LocalDate.parse(ownerDateOfBirth), ownerIdentification);
+        } else throw new UnparseableStringAccount();
+
+        if (accountType.equals(TypeOfAccount.CURRENT_ACCOUNT.getIdentifierString())) {
+            parsedAccount = new CurrentAccount((PhysicalPerson) accountOwner,accountNumber, agency);
+        } else if(accountType.equals(TypeOfAccount.SAVINGS_ACCOUNT.getIdentifierString())) {
+            parsedAccount = new SavingsAccount((PhysicalPerson) accountOwner, accountNumber, agency);
+        } else if (accountType.equals(TypeOfAccount.SPECIAL_ACCOUNT.getIdentifierString())) {
+            parsedAccount = new SpecialAccount((PhysicalPerson) accountOwner, accountNumber, agency, valueEspecialCheck);
+        } else if (accountType.equals(TypeOfAccount.BUSINESS_ACCOUNT.getIdentifierString())) {
+            parsedAccount = new BusinessAccount((LegalPerson) accountOwner, accountNumber, agency, valueEspecialCheck);
+        } else throw new UnparseableStringAccount();
         parsedAccount.deposit(currentBalance);
         return parsedAccount;
     }
@@ -167,17 +171,17 @@ public abstract class Account implements Comparable<Account> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.owner, this.getType(), this.accountNumber, this.currentBalance, this.valueEspecialCheck
-                , this.agency);
+        return Objects.hash(this.owner.toString(), this.getType(), this.accountNumber, this.currentBalance.toString(),
+                this.valueEspecialCheck.toString(), this.agency);
         //This method utilizes its arguments to generate a hash code to an object of this class.
     }
 
     @Override
     public boolean equals(Object toCompare) {
         if(!(toCompare instanceof Account casted)) return false;
-        return (this.owner.equals(casted.owner) && this.getType() == casted.getType() && this.accountNumber ==
-                casted.accountNumber && this.currentBalance == casted.currentBalance && this.valueEspecialCheck ==
-                casted.valueEspecialCheck && this.agency.equals(casted.agency));
+        return (this.owner.equals(casted.owner) && this.getType().equals(casted.getType()) && this.accountNumber ==
+                casted.accountNumber && this.currentBalance.equals(casted.currentBalance) && this.valueEspecialCheck.
+                equals(casted.valueEspecialCheck) && this.agency.equals(casted.agency));
     }
 
     @Override

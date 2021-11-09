@@ -16,7 +16,7 @@ public class BankSystem {
     private final Map<Integer, Account> accounts;
     private final String path;
 
-    public BankSystem(String filePath) throws UnparseableStringAccount {
+    public BankSystem(String filePath) {
         Manager manager = Manager.getInstance();
         if (!FileHandler.fileExists(filePath)) {
             File file = new File(filePath);
@@ -119,7 +119,7 @@ public class BankSystem {
                         cpf = manager.inputDialog("<<<<< Criar Nova Conta Especial (Pessoa Fisica) >>>>>\nInsira seu CPF");
                         dateOfBirth = manager.inputDialog("<<<<< Criar Nova Conta Especial (Pessoa Fisica) >>>>>\nInsira sua data de nascimento (formato aaaa-mm-dd)");
                         valueEspecialCheck = manager.inputDialogForFloatNumber("<<<<< Criar Nova Conta Especial (Pessoa Fisica) >>>>>\nInsira o valor do cheque especial");
-                        newAccount = new EspecialAccount(new PhysicalPerson(ownerName, LocalDate.of(Integer.parseInt(dateOfBirth.split("-")[0].trim()),
+                        newAccount = new SpecialAccount(new PhysicalPerson(ownerName, LocalDate.of(Integer.parseInt(dateOfBirth.split("-")[0].trim()),
                                 Integer.parseInt(dateOfBirth.split("-")[1].trim()), Integer.parseInt(dateOfBirth.split("-")[2].trim())), cpf),
                                 manager.getNewAccountNumber(this.accounts), BankSystem.AGENCY, new BigDecimal(valueEspecialCheck));
                         manager.showMessage(String.format("<<<<< Conta Especial/Pessoa Fisica criada com sucesso >>>>>\nNumero da conta: %d\nCheque especial: R$ %s",
