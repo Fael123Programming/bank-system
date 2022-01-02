@@ -1,8 +1,8 @@
 package br.com.rafael.extra.exceptions;
 
-public class UnparseableStringAccount extends Exception {
+public class NonConvertibleStringAccount extends Exception {
 
-    public UnparseableStringAccount(){
+    public NonConvertibleStringAccount(){
         super("Impossible to generate an account object based on this string");
     }
 }

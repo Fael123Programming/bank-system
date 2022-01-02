@@ -101,8 +101,8 @@ public abstract class Account implements Comparable<Account> {
         return null;
     }
 
-    public static Account parseString(String accountStr) throws UnparseableStringAccount {
-        if (accountStr == null || accountStr.isBlank()) throw new UnparseableStringAccount();
+    public static Account parseString(String accountStr) throws NonConvertibleStringAccount {
+        if (accountStr == null || accountStr.isBlank()) throw new NonConvertibleStringAccount();
         Account parsedAccount;
         String[] keysAndValues = new String[6]; //All attributes of an account are six.
         StringBuilder builder = new StringBuilder();
@@ -136,7 +136,7 @@ public abstract class Account implements Comparable<Account> {
             ownerDateOfBirth = ownerKeysAndValues[1].split(":")[1].trim();
             ownerIdentification = ownerKeysAndValues[2].split(":")[1].trim();
         } catch (ArrayIndexOutOfBoundsException | NullPointerException | NumberFormatException exc) {
-            throw new UnparseableStringAccount();
+            throw new NonConvertibleStringAccount();
         }
         Customer accountOwner;
         if (accountType.equals(TypeOfAccount.CURRENT_ACCOUNT.getIdentifierString()) || accountType.equals(TypeOfAccount.SPECIAL_ACCOUNT.getIdentifierString()) ||
@@ -144,7 +144,7 @@ public abstract class Account implements Comparable<Account> {
             accountOwner = new PhysicalPerson(ownerName, LocalDate.parse(ownerDateOfBirth), ownerIdentification);
         } else if (accountType.equals(TypeOfAccount.BUSINESS_ACCOUNT.getIdentifierString())) {
             accountOwner = new LegalPerson(ownerName, LocalDate.parse(ownerDateOfBirth), ownerIdentification);
-        } else throw new UnparseableStringAccount();
+        } else throw new NonConvertibleStringAccount();
 
         if (accountType.equals(TypeOfAccount.CURRENT_ACCOUNT.getIdentifierString())) {
             parsedAccount = new CurrentAccount((PhysicalPerson) accountOwner,accountNumber, agency);
@@ -154,7 +154,7 @@ public abstract class Account implements Comparable<Account> {
             parsedAccount = new SpecialAccount((PhysicalPerson) accountOwner, accountNumber, agency, valueEspecialCheck);
         } else if (accountType.equals(TypeOfAccount.BUSINESS_ACCOUNT.getIdentifierString())) {
             parsedAccount = new BusinessAccount((LegalPerson) accountOwner, accountNumber, agency, valueEspecialCheck);
-        } else throw new UnparseableStringAccount();
+        } else throw new NonConvertibleStringAccount();
         parsedAccount.deposit(currentBalance);
         return parsedAccount;
     }

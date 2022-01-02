@@ -1,4 +1,4 @@
-package br.com.rafael.resourcebundles;
+package br.com.rafael.resource_bundles;
 
 import java.util.ResourceBundle;
 import java.util.Locale;
