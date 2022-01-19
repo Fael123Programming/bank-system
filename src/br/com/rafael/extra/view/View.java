@@ -18,7 +18,7 @@ public class View {
     }
 
     public static void showMessage(String msg) {
-        JOptionPane.showMessageDialog(null, msg);
+        JOptionPane.showMessageDialog(null, msg, "R.I.C.H Bank", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static int inputDialogForIntegerNumber(String msg) {
@@ -30,7 +30,7 @@ public class View {
     }
 
     public static String inputDialog(String msg) {
-        return JOptionPane.showInputDialog(msg);
+        return JOptionPane.showInputDialog(null, msg, "R.I.C.H Bank", JOptionPane.QUESTION_MESSAGE);
     }
 
     private static int randomNumber(int bound1, int bound2) {

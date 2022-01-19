@@ -1,2 +1,3 @@
-{responsavel: {nome:              Valeria Silva, data de nascimento: 2000-08-10, CPF: 111.222.333-44}, tipo: Conta Poupanca, numero: 76459, saldo atual: R$ 455.01, valor cheque especial: R$ 0, agencia: MAIN-AGENCY}
-{responsavel: {nome:              Pedro Marcos Oliveira, data de nascimento: 1990-04-25, CPF: 333.444.555-90}, tipo: Conta Corrente, numero: 94763, saldo atual: R$ 1000.00, valor cheque especial: R$ 0, agencia: MAIN-AGENCY}
+{responsavel: {nome: ISA Technologies Inc., data de nascimento: 2000-11-27, CNPJ: 123.456/789}, tipo: Conta Especial/Pessoa Juridica, numero: 14326, saldo atual: R$ 0, valor cheque especial: R$ 100000, agencia: MAIN-AGENCY}
+{responsavel: {nome:                Valeria Silva, data de nascimento: 2000-08-10, CPF: 111.222.333-44}, tipo: Conta Poupanca, numero: 76459, saldo atual: R$ 455.01, valor cheque especial: R$ 0, agencia: MAIN-AGENCY}
+{responsavel: {nome:                Pedro Marcos Oliveira, data de nascimento: 1990-04-25, CPF: 333.444.555-90}, tipo: Conta Corrente, numero: 94763, saldo atual: R$ 1000.00, valor cheque especial: R$ 0, agencia: MAIN-AGENCY}
