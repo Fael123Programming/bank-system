@@ -5,7 +5,8 @@ import java.util.Scanner;
 
 public class FileHandler {
 
-    private FileHandler() {}
+    private FileHandler() {
+    }
 
     public static void writeOver(String path, String information) throws IllegalArgumentException, IOException {
         if (path == null || information == null) throw new IllegalArgumentException("Invalid Arguments!");
@@ -21,7 +22,8 @@ public class FileHandler {
         FileOutputStream output = new FileOutputStream(path, true);
         OutputStreamWriter writer = new OutputStreamWriter(output);
         BufferedWriter buffer = new BufferedWriter(writer);
-        if (!FileHandler.fileIsEmpty(path)) buffer.newLine();
+        if (!FileHandler.fileIsEmpty(path))
+            buffer.newLine();
         buffer.write(information);
         buffer.close();
     }
@@ -63,7 +65,8 @@ public class FileHandler {
     }
 
     public static String getLine(String path, int number) throws IllegalArgumentException, FileNotFoundException {
-        if (path == null || number < 0 || number >= FileHandler.fileSize(path)) throw new IllegalArgumentException("Invalid Argument!");
+        if (path == null || number < 0 || number >= FileHandler.fileSize(path))
+            throw new IllegalArgumentException("Invalid Argument!");
         Scanner fileScan = new Scanner(new File(path));
         while (number > 0) {
             fileScan.nextLine();
@@ -87,22 +90,6 @@ public class FileHandler {
     public static boolean fileIsEmpty(String path) throws IllegalArgumentException, FileNotFoundException {
         return FileHandler.fileSize(path) == 0;
     }
-
-    /*public static boolean removeLine(String path, int line){
-        if(!FileHandler.fileExists(path)) return false;
-        try {
-            if (path == null || line < 0 || line >= FileHandler.fileSize(path)) return false;
-            Scanner fileScan = new Scanner(new File(path));
-            while (line > 0) {
-                fileScan.nextLine();
-                line--;
-            }
-            fileScan.
-            return true;
-        } catch(FileNotFoundException exception) {
-            return false;
-        }
-    }*/
 
     public static void clean(String filePath) throws IOException {
         FileHandler.writeOver(filePath, "");

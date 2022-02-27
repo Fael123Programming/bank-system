@@ -5,6 +5,7 @@ import br.com.rafael.extra.accounts.owners.concrete.*;
 import br.com.rafael.extra.accounts.types.concrete.*;
 import br.com.rafael.extra.enum_.TypeOfAccount;
 import br.com.rafael.extra.exceptions.*;
+
 import java.time.LocalDate;
 import java.util.*;
 import java.math.BigDecimal;
@@ -37,12 +38,14 @@ public abstract class Account implements Comparable<Account> {
     }
 
     public void withdraw(BigDecimal quantity) throws InsufficientFundsException, IllegalArgumentException {
-        if(quantity.compareTo(BigDecimal.ZERO) <= 0) throw new IllegalArgumentException("<<<<< Quantia invalida >>>>>");
-        if(quantity.compareTo(this.valueEspecialCheck.add(this.currentBalance)) > 0) throw new InsufficientFundsException(quantity.toString());
+        if (quantity.compareTo(BigDecimal.ZERO) <= 0)
+            throw new IllegalArgumentException("<<<<< Quantia invalida >>>>>");
+        if (quantity.compareTo(this.valueEspecialCheck.add(this.currentBalance)) > 0)
+            throw new InsufficientFundsException(quantity.toString());
         this.currentBalance = this.currentBalance.subtract(quantity);
     }
 
-    public void transfer(Account targetAccount, BigDecimal quantity) throws InsufficientFundsException,IllegalArgumentException {
+    public void transfer(Account targetAccount, BigDecimal quantity) throws InsufficientFundsException, IllegalArgumentException {
         this.withdraw(quantity);
         targetAccount.deposit(quantity);
     }
@@ -130,7 +133,7 @@ public abstract class Account implements Comparable<Account> {
             accountNumber = Integer.parseInt(keysAndValues[2].split(":")[1].trim());
             accountType = keysAndValues[1].split(":")[1].trim();
             currentBalance = new BigDecimal(keysAndValues[3].split(":")[1].replace("R$", "").trim());
-            valueEspecialCheck = new BigDecimal(keysAndValues[4].split(":")[1].replace("R$","").trim());
+            valueEspecialCheck = new BigDecimal(keysAndValues[4].split(":")[1].replace("R$", "").trim());
             ownerKeysAndValues = keysAndValues[0].substring(keysAndValues[0].indexOf('{') + 1, keysAndValues[0].indexOf('}')).split(",");
             ownerName = ownerKeysAndValues[0].split(":")[1];
             ownerDateOfBirth = ownerKeysAndValues[1].split(":")[1].trim();
@@ -147,8 +150,8 @@ public abstract class Account implements Comparable<Account> {
         } else throw new NonConvertibleStringAccount();
 
         if (accountType.equals(TypeOfAccount.CURRENT_ACCOUNT.getIdentifierString())) {
-            parsedAccount = new CurrentAccount((PhysicalPerson) accountOwner,accountNumber, agency);
-        } else if(accountType.equals(TypeOfAccount.SAVINGS_ACCOUNT.getIdentifierString())) {
+            parsedAccount = new CurrentAccount((PhysicalPerson) accountOwner, accountNumber, agency);
+        } else if (accountType.equals(TypeOfAccount.SAVINGS_ACCOUNT.getIdentifierString())) {
             parsedAccount = new SavingsAccount((PhysicalPerson) accountOwner, accountNumber, agency);
         } else if (accountType.equals(TypeOfAccount.SPECIAL_ACCOUNT.getIdentifierString())) {
             parsedAccount = new SpecialAccount((PhysicalPerson) accountOwner, accountNumber, agency, valueEspecialCheck);
@@ -159,7 +162,7 @@ public abstract class Account implements Comparable<Account> {
         return parsedAccount;
     }
 
-    public String getStandardized(){
+    public String getStandardized() {
         return "--------------------------------------------------------------------------\n" +
                 "Responsavel: " + this.getOwner().getName() + "\n" +
                 "Numero da conta: " + this.getAccountNumber() + "\n" +
@@ -178,7 +181,7 @@ public abstract class Account implements Comparable<Account> {
 
     @Override
     public boolean equals(Object toCompare) {
-        if(!(toCompare instanceof Account casted)) return false;
+        if (!(toCompare instanceof Account casted)) return false;
         return (this.owner.equals(casted.owner) && this.getType().equals(casted.getType()) && this.accountNumber ==
                 casted.accountNumber && this.currentBalance.equals(casted.currentBalance) && this.valueEspecialCheck.
                 equals(casted.valueEspecialCheck) && this.agency.equals(casted.agency));
@@ -187,12 +190,12 @@ public abstract class Account implements Comparable<Account> {
     @Override
     public String toString() {
         return String.format("{responsavel: %s, tipo: %s, numero: %d, saldo atual: R$ %s, valor cheque especial: R$ %s, " +
-                "agencia: %s}", this.owner, this.getType(), this.accountNumber, this.currentBalance.toString(),
+                        "agencia: %s}", this.owner, this.getType(), this.accountNumber, this.currentBalance.toString(),
                 this.valueEspecialCheck.toString(), this.agency);
     }
 
     @Override
     public int compareTo(Account toCompare) {
-        return Integer.compare(this.hashCode(),toCompare.hashCode());
+        return Integer.compare(this.hashCode(), toCompare.hashCode());
     }
 }

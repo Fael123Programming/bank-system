@@ -5,7 +5,7 @@ import java.util.Locale;
 
 public class Main {
     public static void main(String[] args) {
-        BankSystem bank = new BankSystem(args[0], Locale.getDefault());
+        BankSystem bank = new BankSystem(args[0], new Locale("pt", "BR"));
 //      args[0] is the path of the file where the accounts will be recorded.
 //      It should be src/br/com/rafael/extra/persistence/accounts.txt
         bank.start();
