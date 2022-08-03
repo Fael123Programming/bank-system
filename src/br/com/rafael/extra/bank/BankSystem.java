@@ -20,18 +20,21 @@ public class BankSystem {
     private final Map<Integer, Account> accounts;
     private final String filePath;
     private final Locale baseLocale;
+    private final BundlePool bundlePool;
 
     public BankSystem(String filePath, Locale baseLocale) {
         BundlePool.setBaseLocale(baseLocale);
+        bundlePool = BundlePool.getInstance();
         File accountFile = new File(filePath);
+        ResourceBundle exceptionBundle = bundlePool.getExceptionBundle();
         if (!accountFile.exists()) {
             try {
                 if (!accountFile.createNewFile()) {
-                    View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("impossibleToCreateFile"));
+                    View.showMessage(exceptionBundle.getString("impossibleToCreateFile"));
                     View.exit();
                 }
             } catch (IOException exc) {
-                View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("impossibleToCreateFile"));
+                View.showMessage(exceptionBundle.getString("impossibleToCreateFile"));
                 View.exit();
             }
         }
@@ -46,18 +49,24 @@ public class BankSystem {
                 account = Account.parseString(fileScan.nextLine());
                 this.accounts.put(account.getAccountNumber(), account);
             }
-        } catch(FileNotFoundException exc) {
+        } catch (FileNotFoundException exc) {
             //Yes... nothing should be done here. Actually, this is never going to be reached.
         } catch (NonConvertibleStringAccount exc) {
-            View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("nonConvertibleStringAccount"));
+            View.showMessage(exceptionBundle.getString("nonConvertibleStringAccount"));
             View.exit();
         }
     }
 
     public void start() {
+        ResourceBundle menuBundle = bundlePool.getMenuBundle();
+        ResourceBundle exceptionBundle = bundlePool.getExceptionBundle();
         while (true) {
             try {
-                switch (View.menu(BundlePool.getInstance().getMenuBundle().getString("mainMenu"))) {
+                switch (
+                        View.menu(
+                                menuBundle.getString("mainMenu")
+                        )
+                ) {
                     case 1 -> createAccount();
                     case 2 -> informationOfAnAccount();
                     case 3 -> movementAccount();//Here withdraw and deposit methods were implemented
@@ -68,18 +77,20 @@ public class BankSystem {
                             FileHandler.appendTo(this.filePath, account.toString());
                         View.exit();
                     }
-                    default -> View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("invalidChoice"));
+                    default ->
+                            View.showMessage(exceptionBundle.getString("invalidChoice"));
                 }
             } catch (NumberFormatException exc) {
-                View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("invalidChoice"));
+                View.showMessage(exceptionBundle.getString("invalidChoice"));
             } catch (FileNotFoundException exc) {
                 //Yes... nothing should be done here. Actually, this is never going to be reached due line 23.
             } catch (IOException exc) {
-                View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("recordAccountsExc"));
+                View.showMessage(exceptionBundle.getString("recordAccountsExc"));
             }
         }
     }
 
+    //Proceed with maintenance from here on.
     private void createAccount() {
         Account newAccount;
         String ownerName, cpf, date;
@@ -123,7 +134,7 @@ public class BankSystem {
                         cnpj = View.inputDialog(BundlePool.getInstance().getAccountCreationBundle().getString("createNewSpecialAccountLP") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertCNPJ"));
                         date = View.inputDialog(BundlePool.getInstance().getAccountCreationBundle().getString("createNewSpecialAccountLP") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertDateOfCreation"));
                         valueEspecialCheck = View.inputDialogForFloatNumber(BundlePool.getInstance().getAccountCreationBundle().getString("createNewSpecialAccountLP") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertSpecialCheckValue"));
-                        newAccount = new BusinessAccount(new LegalPerson(ownerName, LocalDate.parse(date), cnpj),View.getNewAccountNumber(this.accounts), BankSystem.AGENCY, new BigDecimal(valueEspecialCheck));
+                        newAccount = new BusinessAccount(new LegalPerson(ownerName, LocalDate.parse(date), cnpj), View.getNewAccountNumber(this.accounts), BankSystem.AGENCY, new BigDecimal(valueEspecialCheck));
                         View.showMessage(BundlePool.getInstance().getAccountCreationBundle().getString("specialAccountLPCreated") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("accountNumber") + ": " + newAccount.getAccountNumber() +
                                 "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("specialCheck") + ": " + NumberFormat.getCurrencyInstance(this.baseLocale).format(newAccount.getValueEspecialCheck().doubleValue()));
                         this.accounts.put(newAccount.getAccountNumber(), newAccount);
@@ -131,11 +142,12 @@ public class BankSystem {
                     case 5 -> {
                         return;
                     }
-                    default -> View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("invalidChoice"));
+                    default ->
+                            View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("invalidChoice"));
                 }
             } catch (NumberFormatException | NullPointerException ignore) {
                 View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("invalidData"));
-            } catch (ArrayIndexOutOfBoundsException  | DateTimeParseException ignore) {
+            } catch (ArrayIndexOutOfBoundsException | DateTimeParseException ignore) {
                 View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("invalidDate"));
             }
         }
@@ -171,8 +183,11 @@ public class BankSystem {
                     case 1 -> withDrawMoneyOfAnAccount();
                     case 2 -> depositMoneyInAnAccount();
                     case 3 -> transferMoneyBetweenAccounts();
-                    case 4 -> { return; }
-                    default -> View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("invalidChoice"));
+                    case 4 -> {
+                        return;
+                    }
+                    default ->
+                            View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("invalidChoice"));
                 }
             } catch (NumberFormatException exc) {
                 View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("invalidData"));
@@ -221,7 +236,7 @@ public class BankSystem {
         Account toTransferWith = this.accounts.get(numberOfAccountToTransferWith);
         Account toReceiveAmount = this.accounts.get(numberOfAccountToReceiveAmount);
         String amountToTransfer = View.inputDialog(String.format("<<<<< Transferir de uma conta para outra >>>>>%n%n> " +
-                "Conta depositante <%n%s%n> Conta receptora <%n%s%nInsira a quantia a transferir", toTransferWith.getStandardized(),toReceiveAmount.getStandardized()));
+                "Conta depositante <%n%s%n> Conta receptora <%n%s%nInsira a quantia a transferir", toTransferWith.getStandardized(), toReceiveAmount.getStandardized()));
         toTransferWith.transfer(toReceiveAmount, new BigDecimal(amountToTransfer));
         View.showMessage(String.format("<<<<< Transferencia realizada com sucesso! >>>>>%nConta depositante: saldo atual " +
                 "(R$ %s)%nConta receptora: saldo atual (R$ %s)", toTransferWith.getCurrentBalance().toString(), toReceiveAmount.getCurrentBalance().toString()));

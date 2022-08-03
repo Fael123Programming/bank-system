@@ -11,7 +11,6 @@ public class BundlePool {
     private ResourceBundle menuBundle, exceptionBundle, accountCreationBundle, accountInfoBundle;
 
     private BundlePool() {}
-
     public static BundlePool getInstance() { //Singleton facility!
         if (baseLocale == null)
             throw new BaseLocaleNullException();
@@ -50,5 +49,4 @@ public class BundlePool {
     public ResourceBundle getAccountInfoBundle() {
         return this.accountInfoBundle;
     }
-
 }
