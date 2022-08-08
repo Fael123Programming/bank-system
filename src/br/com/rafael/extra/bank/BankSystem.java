@@ -20,13 +20,11 @@ public class BankSystem {
     private final Map<Integer, Account> accounts;
     private final String filePath;
     private final Locale baseLocale;
-    private final BundlePool bundlePool;
 
     public BankSystem(String filePath, Locale baseLocale) {
         BundlePool.setBaseLocale(baseLocale);
-        bundlePool = BundlePool.getInstance();
         File accountFile = new File(filePath);
-        ResourceBundle exceptionBundle = bundlePool.getExceptionBundle();
+        ResourceBundle exceptionBundle = BundlePool.getExceptionBundle();
         if (!accountFile.exists()) {
             try {
                 if (!accountFile.createNewFile()) {
@@ -58,8 +56,8 @@ public class BankSystem {
     }
 
     public void start() {
-        ResourceBundle menuBundle = bundlePool.getMenuBundle();
-        ResourceBundle exceptionBundle = bundlePool.getExceptionBundle();
+        ResourceBundle menuBundle = BundlePool.getMenuBundle();
+        ResourceBundle exceptionBundle = BundlePool.getExceptionBundle();
         while (true) {
             try {
                 switch (
@@ -90,96 +88,102 @@ public class BankSystem {
         }
     }
 
-    //Proceed with maintenance from here on.
     private void createAccount() {
         Account newAccount;
         String ownerName, cpf, date;
         int typeOfAccount;
         double valueEspecialCheck;
+        ResourceBundle menuBundle = BundlePool.getMenuBundle();
+        ResourceBundle accountCreationBundle = BundlePool.getAccountCreationBundle();
+        ResourceBundle exceptionBundle = BundlePool.getExceptionBundle();
         while (true) {
             try {
-                typeOfAccount = View.menu(BundlePool.getInstance().getMenuBundle().getString("accountCreationMenu"));
+                typeOfAccount = View.menu(menuBundle.getString("accountCreationMenu"));
                 switch (typeOfAccount) {
                     case 1 -> {
-                        ownerName = View.inputDialog(BundlePool.getInstance().getAccountCreationBundle().getString("createNewCurrentAccount") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertName"));
-                        cpf = View.inputDialog(BundlePool.getInstance().getAccountCreationBundle().getString("createNewCurrentAccount") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertCPF"));
-                        date = View.inputDialog(BundlePool.getInstance().getAccountCreationBundle().getString("createNewCurrentAccount") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertBirthdate"));
+                        ownerName = View.inputDialog(accountCreationBundle.getString("createNewCurrentAccount") + "\n" + accountCreationBundle.getString("insertName"));
+                        cpf = View.inputDialog(accountCreationBundle.getString("createNewCurrentAccount") + "\n" + accountCreationBundle.getString("insertCPF"));
+                        date = View.inputDialog(accountCreationBundle.getString("createNewCurrentAccount") + "\n" + accountCreationBundle.getString("insertBirthdate"));
                         newAccount = new CurrentAccount(new PhysicalPerson(ownerName, LocalDate.parse(date), cpf), View.getNewAccountNumber(this.accounts), BankSystem.AGENCY);
-                        View.showMessage(BundlePool.getInstance().getAccountCreationBundle().getString("currentAccountCreated") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("accountNumber") + ": " + newAccount.getAccountNumber());
+                        View.showMessage(accountCreationBundle.getString("currentAccountCreated") + "\n" + accountCreationBundle.getString("accountNumber") + ": " + newAccount.getAccountNumber());
                         this.accounts.put(newAccount.getAccountNumber(), newAccount);
                     }
                     case 2 -> {
-                        ownerName = View.inputDialog(BundlePool.getInstance().getAccountCreationBundle().getString("createNewSavingsAccount") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertName"));
-                        cpf = View.inputDialog(BundlePool.getInstance().getAccountCreationBundle().getString("createNewSavingsAccount") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertCPF"));
-                        date = View.inputDialog(BundlePool.getInstance().getAccountCreationBundle().getString("createNewSavingsAccount") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertBirthdate"));
+                        ownerName = View.inputDialog(accountCreationBundle.getString("createNewSavingsAccount") + "\n" + accountCreationBundle.getString("insertName"));
+                        cpf = View.inputDialog(accountCreationBundle.getString("createNewSavingsAccount") + "\n" + accountCreationBundle.getString("insertCPF"));
+                        date = View.inputDialog(accountCreationBundle.getString("createNewSavingsAccount") + "\n" + accountCreationBundle.getString("insertBirthdate"));
                         newAccount = new SavingsAccount(new PhysicalPerson(ownerName, LocalDate.parse(date), cpf), View.getNewAccountNumber(this.accounts), BankSystem.AGENCY);
-                        View.showMessage(BundlePool.getInstance().getAccountCreationBundle().getString("savingsAccountCreated") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("accountNumber") + ": " + newAccount.getAccountNumber() +
-                                "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("yieldPercentage") + ": " + SavingsAccount.getYieldPercentage().movePointRight(2));
+                        View.showMessage(accountCreationBundle.getString("savingsAccountCreated") + "\n" + accountCreationBundle.getString("accountNumber") + ": " + newAccount.getAccountNumber() +
+                                "\n" + accountCreationBundle.getString("yieldPercentage") + ": " + SavingsAccount.getYieldPercentage().movePointRight(2));
                         this.accounts.put(newAccount.getAccountNumber(), newAccount);
                     }
                     case 3 -> {
-                        ownerName = View.inputDialog(BundlePool.getInstance().getAccountCreationBundle().getString("createNewSpecialAccountPP") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertName"));
-                        cpf = View.inputDialog(BundlePool.getInstance().getAccountCreationBundle().getString("createNewSpecialAccountPP") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertCPF"));
-                        date = View.inputDialog(BundlePool.getInstance().getAccountCreationBundle().getString("createNewSpecialAccountPP") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertBirthdate"));
-                        valueEspecialCheck = View.inputDialogForFloatNumber(BundlePool.getInstance().getAccountCreationBundle().getString("createNewSpecialAccountPP") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertSpecialCheckValue"));
+                        ownerName = View.inputDialog(accountCreationBundle.getString("createNewSpecialAccountPP") + "\n" + accountCreationBundle.getString("insertName"));
+                        cpf = View.inputDialog(accountCreationBundle.getString("createNewSpecialAccountPP") + "\n" + accountCreationBundle.getString("insertCPF"));
+                        date = View.inputDialog(accountCreationBundle.getString("createNewSpecialAccountPP") + "\n" + accountCreationBundle.getString("insertBirthdate"));
+                        valueEspecialCheck = View.inputDialogForFloatNumber(accountCreationBundle.getString("createNewSpecialAccountPP") + "\n" + accountCreationBundle.getString("insertSpecialCheckValue"));
                         newAccount = new SpecialAccount(new PhysicalPerson(ownerName, LocalDate.parse(date), cpf),
                                 View.getNewAccountNumber(this.accounts), BankSystem.AGENCY, new BigDecimal(valueEspecialCheck));
-                        View.showMessage(BundlePool.getInstance().getAccountCreationBundle().getString("specialAccountPPCreated") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("accountNumber") + ": " + newAccount.getAccountNumber()
-                                + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("specialCheck") + ": " + NumberFormat.getCurrencyInstance(this.baseLocale).format(newAccount.getValueEspecialCheck().doubleValue()));
+                        View.showMessage(accountCreationBundle.getString("specialAccountPPCreated") + "\n" + accountCreationBundle.getString("accountNumber") + ": " + newAccount.getAccountNumber()
+                                + "\n" + accountCreationBundle.getString("specialCheck") + ": " + NumberFormat.getCurrencyInstance(this.baseLocale).format(newAccount.getValueEspecialCheck().doubleValue()));
                         this.accounts.put(newAccount.getAccountNumber(), newAccount);
                     }
                     case 4 -> {
                         String cnpj;
-                        ownerName = View.inputDialog(BundlePool.getInstance().getAccountCreationBundle().getString("createNewSpecialAccountLP") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertName"));
-                        cnpj = View.inputDialog(BundlePool.getInstance().getAccountCreationBundle().getString("createNewSpecialAccountLP") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertCNPJ"));
-                        date = View.inputDialog(BundlePool.getInstance().getAccountCreationBundle().getString("createNewSpecialAccountLP") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertDateOfCreation"));
-                        valueEspecialCheck = View.inputDialogForFloatNumber(BundlePool.getInstance().getAccountCreationBundle().getString("createNewSpecialAccountLP") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("insertSpecialCheckValue"));
+                        ownerName = View.inputDialog(accountCreationBundle.getString("createNewSpecialAccountLP") + "\n" + accountCreationBundle.getString("insertName"));
+                        cnpj = View.inputDialog(accountCreationBundle.getString("createNewSpecialAccountLP") + "\n" + accountCreationBundle.getString("insertCNPJ"));
+                        date = View.inputDialog(accountCreationBundle.getString("createNewSpecialAccountLP") + "\n" + accountCreationBundle.getString("insertDateOfCreation"));
+                        valueEspecialCheck = View.inputDialogForFloatNumber(accountCreationBundle.getString("createNewSpecialAccountLP") + "\n" + accountCreationBundle.getString("insertSpecialCheckValue"));
                         newAccount = new BusinessAccount(new LegalPerson(ownerName, LocalDate.parse(date), cnpj), View.getNewAccountNumber(this.accounts), BankSystem.AGENCY, new BigDecimal(valueEspecialCheck));
-                        View.showMessage(BundlePool.getInstance().getAccountCreationBundle().getString("specialAccountLPCreated") + "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("accountNumber") + ": " + newAccount.getAccountNumber() +
-                                "\n" + BundlePool.getInstance().getAccountCreationBundle().getString("specialCheck") + ": " + NumberFormat.getCurrencyInstance(this.baseLocale).format(newAccount.getValueEspecialCheck().doubleValue()));
+                        View.showMessage(accountCreationBundle.getString("specialAccountLPCreated") + "\n" + accountCreationBundle.getString("accountNumber") + ": " + newAccount.getAccountNumber() +
+                                "\n" + accountCreationBundle.getString("specialCheck") + ": " + NumberFormat.getCurrencyInstance(this.baseLocale).format(newAccount.getValueEspecialCheck().doubleValue()));
                         this.accounts.put(newAccount.getAccountNumber(), newAccount);
                     }
                     case 5 -> {
                         return;
                     }
                     default ->
-                            View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("invalidChoice"));
+                            View.showMessage(exceptionBundle.getString("invalidChoice"));
                 }
             } catch (NumberFormatException | NullPointerException ignore) {
-                View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("invalidData"));
+                View.showMessage(exceptionBundle.getString("invalidData"));
             } catch (ArrayIndexOutOfBoundsException | DateTimeParseException ignore) {
-                View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("invalidDate"));
+                View.showMessage(exceptionBundle.getString("invalidDate"));
             }
         }
     }
 
     private void informationOfAnAccount() {
+        ResourceBundle exceptionBundle = BundlePool.getExceptionBundle();
+        ResourceBundle accountInfoBundle = BundlePool.getAccountInfoBundle();
         try {
             if (this.accounts.isEmpty()) {
-                View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("noAccounts"));
+                View.showMessage(exceptionBundle.getString("noAccounts"));
                 return;
             }
-            int numberOfAccount = View.inputDialogForIntegerNumber(BundlePool.getInstance().getAccountInfoBundle().getString("accountInformation") +
-                    "\n" + BundlePool.getInstance().getAccountInfoBundle().getString("enterAccountNumber"));
+            int numberOfAccount = View.inputDialogForIntegerNumber(accountInfoBundle.getString("accountInformation") +
+                    "\n" + accountInfoBundle.getString("enterAccountNumber"));
             if (!this.accounts.containsKey(numberOfAccount)) {
-                View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("accountNotFound"));
+                View.showMessage(exceptionBundle.getString("accountNotFound"));
                 return;
             }
             Account requiredAccount = this.accounts.get(numberOfAccount);
-            View.showMessage(BundlePool.getInstance().getAccountInfoBundle().getString("accountInformation") + "\n" + requiredAccount.getStandardized());
+            View.showMessage(accountInfoBundle.getString("accountInformation") + "\n" + requiredAccount.getStandardized());
         } catch (NumberFormatException exception) {
-            View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("invalidData"));
+            View.showMessage(exceptionBundle.getString("invalidData"));
         }
     }
 
     private void movementAccount() throws FileNotFoundException {
+        ResourceBundle exceptionBundle = BundlePool.getExceptionBundle();
+        ResourceBundle menuBundle = BundlePool.getMenuBundle();
         if (this.accounts.isEmpty()) {
-            View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("noAccounts"));
+            View.showMessage(exceptionBundle.getString("noAccounts"));
             return;
         }
         while (true) {
             try {
-                switch (View.menu(BundlePool.getInstance().getMenuBundle().getString("accountMoveMenu"))) {
+                switch (View.menu(menuBundle.getString("accountMoveMenu"))) {
                     case 1 -> withDrawMoneyOfAnAccount();
                     case 2 -> depositMoneyInAnAccount();
                     case 3 -> transferMoneyBetweenAccounts();
@@ -187,10 +191,10 @@ public class BankSystem {
                         return;
                     }
                     default ->
-                            View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("invalidChoice"));
+                            View.showMessage(exceptionBundle.getString("invalidChoice"));
                 }
             } catch (NumberFormatException exc) {
-                View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("invalidData"));
+                View.showMessage(exceptionBundle.getString("invalidData"));
             } catch (AccountNotFoundException | InsufficientFundsException | IllegalArgumentException exception) {
                 View.showMessage(exception.getMessage());
             }
@@ -198,10 +202,12 @@ public class BankSystem {
     }
 
     private void withDrawMoneyOfAnAccount() throws AccountNotFoundException, IllegalArgumentException, InsufficientFundsException {
-        int numberOfAccount = View.inputDialogForIntegerNumber("<<<<< Sacar quantia de uma conta >>>>>\n"
-                + "Insira o numero da conta");
+        ResourceBundle exceptionBundle = BundlePool.getExceptionBundle();
+        ResourceBundle accountMovementBundle = BundlePool.getAccountMovementBundle();
+        int numberOfAccount = View.inputDialogForIntegerNumber(accountMovementBundle.getString("enterAccountNumber"));
+        //Continuar daqui em diante.
         if (!this.accounts.containsKey(numberOfAccount))
-            throw new AccountNotFoundException(BundlePool.getInstance().getExceptionBundle().getString("accountNotFound"));
+            throw new AccountNotFoundException(exceptionBundle.getString("accountNotFound"));
         Account requiredAccount = this.accounts.get(numberOfAccount);
         String amountToGet = View.inputDialog(String.format("<<<<< Sacar quantia de uma conta >>>>>%n"
                 + "%s%nInsira a quantia a sacar", requiredAccount.getStandardized()));
@@ -211,9 +217,10 @@ public class BankSystem {
     }
 
     private void depositMoneyInAnAccount() throws AccountNotFoundException, IllegalArgumentException {
+        ResourceBundle exceptionBundle = BundlePool.getExceptionBundle();
         int numberOfAccount = View.inputDialogForIntegerNumber("<<<<< Depositar quantia em uma conta >>>>>\nInsira o numero da conta");
         if (!this.accounts.containsKey(numberOfAccount))
-            throw new AccountNotFoundException(BundlePool.getInstance().getExceptionBundle().getString("accountNotFound"));
+            throw new AccountNotFoundException(exceptionBundle.getString("accountNotFound"));
         Account requiredAccount = this.accounts.get(numberOfAccount);
         String amountToDeposit = View.inputDialog(String.format("<<<<< Depositar quantia em uma conta >>>>>%n%s%nInsira a quantia a depositar", requiredAccount.getStandardized()));
         requiredAccount.deposit(new BigDecimal(amountToDeposit)); //This line can throw an IllegalArgumentException
@@ -221,20 +228,22 @@ public class BankSystem {
     }
 
     private void transferMoneyBetweenAccounts() throws AccountNotFoundException, InsufficientFundsException, IllegalArgumentException {
+        ResourceBundle exceptionBundle = BundlePool.getExceptionBundle();
         if (this.accounts.size() <= 1) {
-            View.showMessage(BundlePool.getInstance().getExceptionBundle().getString("cannotTransfer"));
+            View.showMessage(exceptionBundle.getString("cannotTransfer"));
             return;
         }
         int numberOfAccountToTransferWith = View.inputDialogForIntegerNumber(String.format("<<<<< Transferir"
                 + " de uma conta para outra >>>>>%nInsira o numero da conta depositante"));
         if (!this.accounts.containsKey(numberOfAccountToTransferWith))
-            throw new AccountNotFoundException(BundlePool.getInstance().getExceptionBundle().getString("accountNotFound"));
+            throw new AccountNotFoundException(exceptionBundle.getString("accountNotFound"));
         int numberOfAccountToReceiveAmount = View.inputDialogForIntegerNumber(String.format("<<<<< Transferir"
                 + " de uma conta para outra >>>>>%nInsira o numero da conta receptora"));
-        if (!this.accounts.containsKey(numberOfAccountToReceiveAmount))
-            throw new AccountNotFoundException(BundlePool.getInstance().getExceptionBundle().getString("accountNotFound"));
-        Account toTransferWith = this.accounts.get(numberOfAccountToTransferWith);
-        Account toReceiveAmount = this.accounts.get(numberOfAccountToReceiveAmount);
+        if (!this.accounts.containsKey(numberOfAccountToReceiveAmount)) {
+            throw new AccountNotFoundException(exceptionBundle.getString("accountNotFound"));
+        }
+        Account toTransferWith = accounts.get(numberOfAccountToTransferWith);
+        Account toReceiveAmount = accounts.get(numberOfAccountToReceiveAmount);
         String amountToTransfer = View.inputDialog(String.format("<<<<< Transferir de uma conta para outra >>>>>%n%n> " +
                 "Conta depositante <%n%s%n> Conta receptora <%n%s%nInsira a quantia a transferir", toTransferWith.getStandardized(), toReceiveAmount.getStandardized()));
         toTransferWith.transfer(toReceiveAmount, new BigDecimal(amountToTransfer));
